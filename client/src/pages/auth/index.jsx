@@ -57,46 +57,59 @@ const Auth = () => {
     }
 
     const handleLogin = async () => {
-        if (validateLogin()){
-            const res = await apiClient.post(LOGIN_ROUTE,
-                {
-                    email, 
-                    password,
-                },
-                {withCredentials: true}
-            )
-            if (res.data.user._id) {
-                setUserInfo(res.data.user)
-                if (res.data.user.profileSetup) {
-                    navigate("/chat");
-                } else {
-                    navigate("/profile");
-                }
-            }
-            else {
-                toast.error("Something went wrong in handleLogin");
-            }
+        if (validateLogin()) {
+            try {
+                const res = await apiClient.post(
+                    LOGIN_ROUTE,
+                    { email, password },
+                    { withCredentials: true }
+                );
     
-            console.log("🚀 ~ handleLogin ~ res:", res)
+                if (res.data?.user?._id) {
+                    setUserInfo(res.data.user);
+                    if (res.data.user.profileSetup) {
+                        navigate("/chat");
+                        toast.success("Logged in successfully");
+                    } else {
+                        navigate("/profile");
+                        toast.info("Please complete your profile");
+                    }
+                } else {
+                    toast.error("Login not allowed: Invalid user data received.");
+                }
+    
+                console.log("🚀 ~ handleLogin ~ res:", res);
+            } catch (error) {
+                toast.error( "Invalid credentials");
+                console.error("Login error:", error);
+            }
         }
-    }
+    };
 
     const handleSignup = async () => {
-        if (validateSignup()){
-            const res = await apiClient.post(SIGNUP_ROUTE,
-                {
-                    email, 
-                    password,
-                },
-                {withCredentials: true}
-            )
-            if (res.status === 201) {
-                setUserInfo(res.data.user)
-                navigate("/profile")
-            } 
-            console.log("🚀 ~ handleSignup ~ res:", res)
-        } 
+    if (validateSignup()) {
+        try {
+            const res = await apiClient.post(
+                SIGNUP_ROUTE,
+                { email, password },
+                { withCredentials: true }
+            );
+
+            if (res.status === 201 && res.data?.user?._id) {
+                setUserInfo(res.data.user);
+                navigate("/profile");
+                toast.info("Please complete your profile.");
+            } else {
+                toast.error("Signup failed: Invalid user data received.");
+            }
+
+            console.log("🚀 ~ handleSignup ~ res:", res);
+        } catch (error) {
+            toast.error("Signup failed: Something went wrong.");
+            console.error("Signup error:", error);
+        }
     }
+};
 
 
   return (

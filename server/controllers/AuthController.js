@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import bcrypt from "bcrypt";
+import { renameSync, unlinkSync } from "fs"
 
 
 
@@ -152,4 +153,79 @@ export const updateProfile = async (req, res, next) => {
         return res.status(500).json( "Internal server error getUserInfoController: " + error.message);
     }
 }
+
+
+export const addProfileImage = async (req, res, next) => {
+    try {
+
+        if (!req.file) {
+            return res.status(400).json({ message: "Image is required" });
+        }
+
+        const date = Date.now();
+        let fileName = "uploads/profiles/" + date + req.file.originalname;
+        renameSync(req.file.path, fileName);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.userId, 
+            { image: fileName }, 
+            { new: true , runValidators: true }
+        );
+        
+ 
+        return res.status(200).json({ 
+            image: updatedUser.image,
+        }); 
+
+
+    } catch (error) {
+        console.log("Error in getUserInfo controller:", error)
+        return res.status(500).json( "Internal server error getUserInfoController: " + error.message);
+    }
+}
+
+
+export const deleteProfileImage = async (req, res, next) => {
+    try {
+
+        const {userId} = req;
+
+        const user = await User.findById(userId)
+
+        if(!user){
+            return res.status(404).send("User not found")
+        }
+
+        if(user.image){
+            unlinkSync(user.image)
+        }
+
+        user.image=null
+        await user.save()
+        
+        
+        return res.status(200).send("Profile image removed successfully ")
+
+    } catch (error) {
+        console.log("Error in getUserInfo controller:", error)
+        return res.status(500).json( "Internal server error getUserInfoController: " + error.message);
+    }
+}
+
+
+
+export const logOut = async (req, res, next) => {
+    try {
+
+        res.cookie("jwt", "", {maxAge:1 , secure:true, sameSite: "None"})
+        
+        return res.status(200).send("Logged out successfully ")
+
+    } catch (error) {
+        console.log("Error in logOut controller:", error)
+        return res.status(500).json( "Internal server error logOutController: " + error.message);
+    }
+}
+
+
 
