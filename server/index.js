@@ -7,6 +7,7 @@ import authRoutes from './routes/AuthRoute.js';
 import contactsRoutes from './routes/ContactRoutes.js';
 import setUpSocket from './socket.js';
 import messagesRoutes from './routes/MessagesRoute.js';
+import channelRoute from './routes/ChannelRoute.js';
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors({
 }));
 
 app.use("/uploads/profiles", express.static("uploads/profiles"));
+app.use("/uploads/files", express.static("uploads/files"))
 
 
 app.use(cookieParser());
@@ -31,6 +33,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/contacts", contactsRoutes)
 
 app.use("/api/messages", messagesRoutes)
+
+app.use("/api/channel", channelRoute)
 
 const server = app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

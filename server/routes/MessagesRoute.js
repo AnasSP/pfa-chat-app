@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { getMessages } from "../controllers/MessagesController.js";
+import { getMessages, uploadFile } from "../controllers/MessagesController.js";
 import { verifyToken } from "../middlewares/AuthMiddleware.js";
+import multer from "multer"
 
 
 const messagesRoutes = Router()
 
-messagesRoutes.post("/get-messages", verifyToken, getMessages)
+const upload = multer({dest: "uploads/files"})
 
-export default messagesRoutes
+messagesRoutes.post("/get-messages", verifyToken, getMessages)
+messagesRoutes.post("/upload-file", verifyToken, upload.single("file"), uploadFile)
+
+export default messagesRoutes 
