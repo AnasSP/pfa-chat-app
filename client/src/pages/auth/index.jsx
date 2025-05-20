@@ -11,6 +11,7 @@ import { apiClient } from '@/lib/api-client.js'
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../../utils/constants'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store'
+import authBg from '@/assets/auth.svg'  // Add this import
 
 const Auth = () => {
 
@@ -113,8 +114,8 @@ const Auth = () => {
 
 
   return (
-    <div className='h-[100vh] w-[100vw] flex items-center justify-center'>
-        <div className='h-[80vh] w-[80vw] bg-white border-2 border-white text-opacity-90 shadow-2xl md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2 '>
+    <div className='h-[100vh] w-[100vw] flex items-center justify-center' style={{ backgroundImage: `url(${authBg})`  }} >
+        <div className='h-[70vh] w-[70vw] bg-white border-2 border-white text-opacity-90 shadow-2xl md:w-[90vw] lg:w-[70vw] xl:w-[50vw] rounded-3xl grid xl:grid-cols-1 '>
 
             <div className='flex flex-col gap-10 items-center justify-center'>
                 <div className='flex flex-col items-center justify-center'>
@@ -166,9 +167,9 @@ const Auth = () => {
                 </div>
             </div>
 
-            <div className='hidden xl:flex justify-center items-center' >
+            {/* <div className='hidden xl:flex justify-center items-center' >
                 <img src={Background} alt="backgroud login image" className='h-[700px] ' />
-            </div>
+            </div> */}
 
         </div>
     </div>

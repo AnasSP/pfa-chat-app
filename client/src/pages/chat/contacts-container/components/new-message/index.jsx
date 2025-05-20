@@ -73,7 +73,7 @@ const NewMessage = () => {
         <Dialog open={openNewContact} onOpenChange={setOpenNewContact} >
             <DialogContent className="bg-[#181920] border-none text-white w-[400px] h-[400px] flex flex-col " >
                 <DialogHeader>
-                <DialogTitle className="flex items-center justify-center" >Are you absolutely sure?</DialogTitle>
+                <DialogTitle className="flex items-center justify-center" >Search Contacts</DialogTitle>
                 {/* <DialogDescription></DialogDescription> */}
                 </DialogHeader>
 
@@ -142,7 +142,7 @@ const NewMessage = () => {
                         
                                 <div className="text-opacity-80 text-white flex flex-col gap-5 items-center mt-5 lg:text-2xl text-xl transition-all duration-300 text-center ">
                                     <h3 className="poppins-medium">
-                                        Hi <span className=' text-purple-500  ' >!</span> Search New  <span className=" text-purple-500 ">Contacts.</span>
+                                        Hi <span className=' text-purple-500  ' >!</span> Find New  <span className=" text-purple-500 ">Contacts.</span>
                                     </h3>
                                 </div>
                         

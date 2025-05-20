@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import ProfileInfo from './components/profile-info';
 import NewMessage from './components/new-message';
 import { apiClient } from '../../../lib/api-client';
-import { GET_CONTACTS_ROUTES } from '../../../utils/constants';
+import { GET_CONTACTS_ROUTES, GET_USER_CHANNELS_ROUTES } from '../../../utils/constants';
 import { useAppStore } from '../../../store';
 import ContactList from '../../../components/contact-list';
+import CreateChannel from './components/create-channel';
 
 const ContactsContainer = () => {
 
-    const { setDirectMessagesContacts, directMessagesContacts } = useAppStore();
+    const { setDirectMessagesContacts, directMessagesContacts, channels, setChannels } = useAppStore();
 
     useEffect (() => {
         const getContacts = async () => {
@@ -19,10 +20,18 @@ const ContactsContainer = () => {
             }
         }
 
+        const getUserChannels = async () => {
+            const res = await apiClient.get(GET_USER_CHANNELS_ROUTES, {withCredentials:true})
+
+            if (res.data.channels){
+                setChannels(res.data.channels)
+            }
+        }
+
 
         getContacts()
-
-    },[])
+        getUserChannels()
+    },[setChannels, setDirectMessagesContacts])
 
   return (
     <div className='relative md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full ' >
@@ -49,6 +58,10 @@ const ContactsContainer = () => {
                 <ul className='list-disc pl-12' >
                     <li><Title text="Channels" /></li>
                 </ul>
+                <CreateChannel/>
+            </div>
+            <div className="max-h-[308vh] overflow-y-auto scrollbar-hidden">
+                <ContactList contacts={channels} isChannel={true} />
             </div>
         </div>
         <ProfileInfo/>

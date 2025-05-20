@@ -6,12 +6,16 @@ import { IoSend } from 'react-icons/io5'
 import EmojiPicker from 'emoji-picker-react'
 import { useAppStore } from '../../../../../store'
 import { useSocket } from '../../../../../context/SocketContext'
+import { apiClient } from '../../../../../lib/api-client'
+import { UPLOADR_FILE_ROUTE } from '../../../../../utils/constants'
+import { toast } from 'sonner'
 
 const MessageBar = () => {
 
     const emojiRef = useRef()
+    const fileInputRef = useRef()
 
-    const {selectedChatType, selectedChatData, userInfo } = useAppStore()
+    const {selectedChatType, selectedChatData, userInfo, setIsUploading, setFileUploadProgress } = useAppStore()
     const socket = useSocket()
 
     const [message, setMessage] = useState("")
@@ -43,6 +47,72 @@ const MessageBar = () => {
                 messageType: "text",
                 fileUrl: undefined
             })
+        } else  if(selectedChatType === "channel"){
+            socket.emit("sendChannelMessage",{
+                sender: userInfo._id,
+                content: message,
+                messageType: "text",
+                fileUrl: undefined,
+                channelId: selectedChatData._id
+            })
+        }
+        setMessage("")
+    }
+
+    const handleAttachmentClick = () => {
+        if(fileInputRef.current){
+            fileInputRef.current.click()
+        }
+    }
+
+    const handleAttachmentChange = async (e) =>{
+        try {
+            const file = e.target.files[0]
+
+            if(file){
+                const formData = new FormData()
+                formData.append("file",file)
+
+                setIsUploading(true)
+
+                const res = await apiClient.post(UPLOADR_FILE_ROUTE, formData, 
+                    {
+                        withCredentials: true,
+                        onUploadProgress: data =>{
+                            setFileUploadProgress(Math.round((data.loaded *100)/data.total))
+                        }
+                    },
+                )
+
+                if(res.status === 200 && res.data){
+                    setIsUploading(false)
+                    if(selectedChatType === "contact"){
+                        socket.emit("sendMessage",{
+                            sender: userInfo._id,
+                            content: undefined,
+                            receiver: selectedChatData._id,
+                            messageType: "file",
+                            fileUrl: res.data.filePath
+                        })
+                    }
+                
+                }else if(selectedChatType === "channel"){
+                    socket.emit("sendChannelMessage",{
+                        sender: userInfo._id,
+                        content: undefined,
+                        messageType: "file",
+                        fileUrl: res.data.filePath,
+                        channelId: selectedChatData._id
+                    })
+                }
+            }
+            console.log({file})
+            toast.success("File uploaded successfully")
+        } catch (error) {
+            setIsUploading(false)
+            console.log("handleAttachmentChange ~ error:", error)
+            toast.error("Error while uploading the file")
+            
         }
     }
 
@@ -60,10 +130,12 @@ const MessageBar = () => {
 
             <button 
                 className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all cursor-pointer ' 
-                // onClick={}
+                onClick={handleAttachmentClick}
             >
                 <GrAttachment className='text-2xl' />
             </button>
+
+            <input type="file" className='hidden' ref={fileInputRef} onChange={handleAttachmentChange} />
 
             <div className="realative  ">
 
