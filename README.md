@@ -1,6 +1,6 @@
 # PFA Chat Application
 
-A modern real-time chat application built with the MERN stack (MongoDB, Express.js, React, Node.js), featuring real-time messaging, user authentication, and a beautiful UI using Tailwind CSS.
+A modern real-time chat application built with the MERN stack (MongoDB, Express.js, React, Node.js), featuring real-time messaging, user authentication, and a UI built using Tailwind CSS.
 
 ## Features
 
@@ -8,7 +8,6 @@ A modern real-time chat application built with the MERN stack (MongoDB, Express.
 - User authentication with JWT
 - Group chat support
 - Message history
-- Online/offline status
 - Message notifications
 - Profile customization
 - Media sharing capabilities
@@ -88,22 +87,6 @@ The client will run on `http://localhost:5173` and the server on `http://localho
 4. Create or join group chats
 5. Customize your profile
 6. Share media and messages
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
 
 Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
 Project Link: [https://github.com/yourusername/pfa-chat-app](https://github.com/yourusername/pfa-chat-app)
