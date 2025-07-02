@@ -88,4 +88,3 @@ The client will run on `http://localhost:5173` and the server on `http://localho
 5. Customize your profile
 6. Share media and messages
 
-Project Link: [https://github.com/yourusername/pfa-chat-app](https://github.com/yourusername/pfa-chat-app)
